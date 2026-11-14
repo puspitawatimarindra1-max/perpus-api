@@ -126,7 +126,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -156,7 +156,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -217,7 +217,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -232,7 +232,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/BookInput"
+                                "$ref": "#/components/schemas/BookRequest"
                             }
                         }
                     }
@@ -264,7 +264,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -307,7 +307,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -369,7 +369,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -410,7 +410,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             },
@@ -471,7 +471,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -479,64 +479,115 @@
     },
     "components": {
         "schemas": {
-            "Book": {
-                "required": [
-                    "id",
-                    "title",
-                    "author",
-                    "isbn",
-                    "published_year",
-                    "stock"
-                ],
+            "TokenResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/MessageResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "Login berhasil"
+                            },
+                            "token": {
+                                "type": "string",
+                                "example": "1|your-personal-access-token"
+                            },
+                            "token_type": {
+                                "type": "string",
+                                "example": "Bearer"
+                            },
+                            "user": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "ValidationError": {
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "title": {
+                    "message": {
                         "type": "string",
-                        "example": "Bumi Manusia"
+                        "example": "The given data was invalid."
                     },
-                    "author": {
-                        "type": "string",
-                        "example": "Pramoedya Ananta Toer"
-                    },
-                    "publisher": {
-                        "type": "string",
-                        "example": "Lentera Dipantara",
-                        "nullable": true
-                    },
-                    "isbn": {
-                        "type": "string",
-                        "example": "9789799731234"
-                    },
-                    "published_year": {
-                        "type": "integer",
-                        "example": 1980
-                    },
-                    "stock": {
-                        "type": "integer",
-                        "example": 12
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Tetralogi Buru bagian pertama.",
-                        "nullable": true
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "nullable": true
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "nullable": true
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 },
                 "type": "object"
             },
-            "BookInput": {
+            "MessageResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Buku berhasil dihapus"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginInput": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "device_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 100
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterInput": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Nama Pengguna",
+                        "maxLength": 100
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "BookRequest": {
                 "required": [
                     "title",
                     "author",
@@ -617,6 +668,63 @@
                 },
                 "type": "object"
             },
+            "Book": {
+                "required": [
+                    "id",
+                    "title",
+                    "author",
+                    "isbn",
+                    "published_year",
+                    "stock"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Bumi Manusia"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "Pramoedya Ananta Toer"
+                    },
+                    "publisher": {
+                        "type": "string",
+                        "example": "Lentera Dipantara",
+                        "nullable": true
+                    },
+                    "isbn": {
+                        "type": "string",
+                        "example": "9789799731234"
+                    },
+                    "published_year": {
+                        "type": "integer",
+                        "example": 1980
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Tetralogi Buru bagian pertama.",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "BookResource": {
                 "properties": {
                     "data": {
@@ -640,33 +748,6 @@
                     "meta": {
                         "type": "object",
                         "additionalProperties": true
-                    }
-                },
-                "type": "object"
-            },
-            "ValidationError": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "The given data was invalid."
-                    },
-                    "errors": {
-                        "type": "object",
-                        "additionalProperties": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "MessageResponse": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Buku berhasil dihapus"
                     }
                 },
                 "type": "object"
@@ -701,84 +782,12 @@
                     }
                 },
                 "type": "object"
-            },
-            "RegisterInput": {
-                "required": [
-                    "name",
-                    "email",
-                    "password",
-                    "password_confirmation"
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Nama Pengguna",
-                        "maxLength": 100
-                    },
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "user@example.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password",
-                        "minLength": 8
-                    },
-                    "password_confirmation": {
-                        "type": "string",
-                        "format": "password"
-                    }
-                },
-                "type": "object"
-            },
-            "LoginInput": {
-                "required": [
-                    "email",
-                    "password"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "user@example.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password"
-                    },
-                    "device_name": {
-                        "type": "string",
-                        "nullable": true,
-                        "maxLength": 100
-                    }
-                },
-                "type": "object"
-            },
-            "TokenResponse": {
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Login berhasil"
-                    },
-                    "token": {
-                        "type": "string",
-                        "example": "1|your-personal-access-token"
-                    },
-                    "token_type": {
-                        "type": "string",
-                        "example": "Bearer"
-                    },
-                    "user": {
-                        "$ref": "#/components/schemas/User"
-                    }
-                },
-                "type": "object"
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
+            "sanctum": {
                 "type": "http",
+                "description": "Gunakan token dari endpoint login dengan format Bearer <token>.",
                 "bearerFormat": "Sanctum token",
                 "scheme": "bearer"
             }

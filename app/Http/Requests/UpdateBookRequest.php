@@ -5,7 +5,22 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'BookUpdate',
+    type: 'object',
+    description: 'Kirim hanya field yang ingin diubah. Field yang dikirim tetap harus valid.',
+    properties: [
+        new OA\Property(property: 'title', type: 'string', maxLength: 255),
+        new OA\Property(property: 'author', type: 'string', maxLength: 255),
+        new OA\Property(property: 'publisher', type: 'string', nullable: true, maxLength: 255),
+        new OA\Property(property: 'isbn', type: 'string', maxLength: 20),
+        new OA\Property(property: 'published_year', type: 'integer', minimum: 1000),
+        new OA\Property(property: 'stock', type: 'integer', minimum: 0),
+        new OA\Property(property: 'description', type: 'string', nullable: true),
+    ]
+)]
 class UpdateBookRequest extends FormRequest
 {
     /**

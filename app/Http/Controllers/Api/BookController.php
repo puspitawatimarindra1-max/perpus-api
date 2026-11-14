@@ -48,7 +48,7 @@ class BookController extends Controller
             ),
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -76,7 +76,7 @@ class BookController extends Controller
         tags: ['Books'],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/BookInput')
+            content: new OA\JsonContent(ref: '#/components/schemas/BookRequest')
         ),
         responses: [
             new OA\Response(
@@ -91,7 +91,7 @@ class BookController extends Controller
             ),
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function store(StoreBookRequest $request): JsonResponse
     {
@@ -122,7 +122,7 @@ class BookController extends Controller
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
             new OA\Response(response: 404, description: 'Buku tidak ditemukan'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function show(Book $book): BookResource
     {
@@ -161,7 +161,7 @@ class BookController extends Controller
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
             new OA\Response(response: 404, description: 'Buku tidak ditemukan'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     #[OA\Patch(
         path: '/api/books/{book}',
@@ -194,7 +194,7 @@ class BookController extends Controller
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
             new OA\Response(response: 404, description: 'Buku tidak ditemukan'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function update(UpdateBookRequest $request, Book $book): BookResource
     {
@@ -225,7 +225,7 @@ class BookController extends Controller
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
             new OA\Response(response: 404, description: 'Buku tidak ditemukan'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function destroy(Book $book): JsonResponse
     {

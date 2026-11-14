@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'TokenResponse',
+    type: 'object',
+    properties: [
+        new OA\Property(property: 'message', type: 'string', example: 'Login berhasil'),
+        new OA\Property(property: 'token', type: 'string', example: '1|your-personal-access-token'),
+        new OA\Property(property: 'token_type', type: 'string', example: 'Bearer'),
+        new OA\Property(property: 'user', ref: '#/components/schemas/User'),
+    ]
+)]
 class AuthController extends Controller
 {
     #[OA\Post(
@@ -107,7 +117,7 @@ class AuthController extends Controller
             ),
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function me(Request $request): UserResource
     {
@@ -128,7 +138,7 @@ class AuthController extends Controller
             ),
             new OA\Response(response: 401, description: 'Token tidak ada atau tidak valid'),
         ],
-        security: [['bearerAuth' => []]]
+        security: [['sanctum' => []]]
     )]
     public function logout(Request $request): JsonResponse
     {

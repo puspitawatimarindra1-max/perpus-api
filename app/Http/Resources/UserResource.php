@@ -1,8 +1,28 @@
 <?php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'User',
+    type: 'object',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Nama Pengguna'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@example.com'),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', nullable: true),
+    ]
+)]
+#[OA\Schema(
+    schema: 'UserResource',
+    type: 'object',
+    properties: [
+        new OA\Property(property: 'data', ref: '#/components/schemas/User'),
+    ]
+)]
 class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
